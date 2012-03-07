@@ -1,0 +1,28 @@
+= Fluent event to hipchat plugin.
+
+= Installation
+
+  $ fluent-gem install fluent-plugin-hipchat
+
+= Usage
+
+    <match hipchat>
+      type hipchat
+      api_token XXX
+      default_room my_room
+      default_from fluentd
+      default_color yellow
+    </match>
+
+
+    fluent_logger.post('hipchat', {
+      :from     => 'alice',
+      :message  => 'Hello<br>World!',
+      :color    => 'red',
+      :room     => 'my_room',
+    })
+
+= Copyright
+
+Copyright:: Copyright (c) 2012- Yuichi Tateno
+License::   Apache License, Version 2.0
