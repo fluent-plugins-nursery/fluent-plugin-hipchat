@@ -1,13 +1,16 @@
 
 module Fluent
   class HipchatOutput < Output
-    COLORS = %w(yellow green purple random)
+    COLORS = %w(yellow red green purple gray random)
+    FORMAT = %w(html text)
     Fluent::Plugin.register_output('hipchat', self)
 
     config_param :api_token, :string
     config_param :default_room, :string, :default => nil
     config_param :default_color, :string, :default => nil
     config_param :default_from, :string, :default => nil
+    config_param :default_notify, :bool, :default => nil
+    config_param :default_format, :string, :default => nil
 
     attr_reader :hipchat
 
@@ -20,9 +23,11 @@ module Fluent
       super
 
       @hipchat = HipChat::API.new(conf['api_token'])
-      @default_from = conf['default_from'] || 'fluentd'
       @default_room = conf['default_room']
+      @default_from = conf['default_from'] || 'fluentd'
+      @default_notify = conf['default_notify'] || 0
       @default_color = conf['default_color'] || 'yellow'
+      @default_format = conf['default_format'] || 'html'
     end
 
     def emit(tag, es, chain)
@@ -39,9 +44,14 @@ module Fluent
       room = record['room'] || @default_room
       from = record['from'] || @default_from
       message = record['message'] || ''
-      notify = record['notify'] ? 1 : 0
+      if record['notify'].nil?
+        notify = @default_notify
+      else
+        notify = record['notify'] ? 1 : 0
+      end
       color = COLORS.include?(record['color']) ? record['color'] : @default_color
-      @hipchat.rooms_message(room, from, message, notify, color)
+      message_format = FORMAT.include?(record['format']) ? record['format'] : @default_format
+      @hipchat.rooms_message(room, from, message, notify, color, message_format)
     end
   end
 end

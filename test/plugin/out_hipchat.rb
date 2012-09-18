@@ -27,8 +27,11 @@ class HipchatOutputTest < Test::Unit::TestCase
     api_token testtoken
     default_room testroom
     default_from testuser
-    default_color red
+    default_color yellow
   ]
+
+#    default_notify 1
+#        default_format html
 
   def create_driver(conf = CONFIG)
     OutputTestDriver.new(Fluent::HipchatOutput) {
@@ -41,7 +44,7 @@ class HipchatOutputTest < Test::Unit::TestCase
                       api_token xxx
                       default_room testroom
                       EOF
-    stub(d.instance.hipchat).rooms_message('testroom', 'fluentd', 'foo', 0, 'yellow')
+    stub(d.instance.hipchat).rooms_message('testroom', 'fluentd', 'foo', 0, 'yellow', 'html')
     assert_equal d.instance.hipchat.instance_variable_get(:@token), 'xxx'
     d.emit({'message' => 'foo'})
     d.run
@@ -49,15 +52,15 @@ class HipchatOutputTest < Test::Unit::TestCase
 
   def test_message
     d = create_driver
-    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red')
+    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red', 'html')
     assert_equal d.instance.hipchat.instance_variable_get(:@token), 'testtoken'
-    d.emit({'message' => 'foo'})
+    d.emit({'message' => 'foo', 'color' => 'red'})
     d.run
   end
 
   def test_message_override
     d = create_driver
-    stub(d.instance.hipchat).rooms_message('my', 'alice', 'aaa', 1, 'random')
+    stub(d.instance.hipchat).rooms_message('my', 'alice', 'aaa', 1, 'random', 'text')
     d.emit(
       {
         'room' => 'my',
@@ -65,6 +68,7 @@ class HipchatOutputTest < Test::Unit::TestCase
         'message' => 'aaa',
         'notify' => true,
         'color' => 'random',
+        'format' => 'text',
       }
     )
     d.run
@@ -72,7 +76,7 @@ class HipchatOutputTest < Test::Unit::TestCase
 
   def test_color_validate
     d = create_driver
-    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red')
+    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'yellow', 'html')
     d.emit({'message' => 'foo', 'color' => 'invalid'})
     d.run
   end
