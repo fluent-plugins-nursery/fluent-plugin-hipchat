@@ -12,6 +12,8 @@
       default_room my_room
       default_from fluentd
       default_color yellow
+      default_notify 0
+      default_format html
     </match>
 
 
@@ -20,6 +22,8 @@
       :message  => 'Hello<br>World!',
       :color    => 'red',
       :room     => 'my_room',
+      :notify     => 1,
+      :format     => 'text',
     })
 
 = Copyright
