@@ -22,8 +22,8 @@
       :message  => 'Hello<br>World!',
       :color    => 'red',
       :room     => 'my_room',
-      :notify     => 1,
-      :format     => 'text',
+      :notify   => 1,
+      :format   => 'text',
     })
 
 = Copyright
