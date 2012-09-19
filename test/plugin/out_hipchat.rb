@@ -19,7 +19,6 @@ class HipchatOutputTest < Test::Unit::TestCase
   def setup
     super
     Fluent::Test.setup
-    # any_instance_of(HipChat::Client, :redis= => lambda {}, :redis => @subject)
   end
 
   CONFIG = %[
@@ -29,9 +28,6 @@ class HipchatOutputTest < Test::Unit::TestCase
     default_from testuser
     default_color yellow
   ]
-
-#    default_notify 1
-#        default_format html
 
   def create_driver(conf = CONFIG)
     OutputTestDriver.new(Fluent::HipchatOutput) {
