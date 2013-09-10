@@ -29,6 +29,13 @@ class HipchatOutputTest < Test::Unit::TestCase
     default_color yellow
   ]
 
+  CONFIG_FOR_PROXY = %[
+    http_proxy_host localhost
+    http_proxy_port 8080
+    http_proxy_user user
+    http_proxy_pass password
+  ]
+
   def create_driver(conf = CONFIG)
     OutputTestDriver.new(Fluent::HipchatOutput) {
     }.configure(conf)
@@ -75,5 +82,13 @@ class HipchatOutputTest < Test::Unit::TestCase
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'yellow', 'html')
     d.emit({'message' => 'foo', 'color' => 'invalid'})
     d.run
+  end
+
+  def test_http_proxy
+    create_driver(CONFIG + CONFIG_FOR_PROXY)
+    assert_equal 'localhost', HipChat::API.default_options[:http_proxyaddr]
+    assert_equal '8080', HipChat::API.default_options[:http_proxyport]
+    assert_equal 'user', HipChat::API.default_options[:http_proxyuser]
+    assert_equal 'password', HipChat::API.default_options[:http_proxypass]
   end
 end
