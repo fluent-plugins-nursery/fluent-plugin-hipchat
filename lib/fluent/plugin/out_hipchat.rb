@@ -11,6 +11,10 @@ module Fluent
     config_param :default_from, :string, :default => nil
     config_param :default_notify, :bool, :default => nil
     config_param :default_format, :string, :default => nil
+    config_param :http_proxy_host, :string, :default => nil
+    config_param :http_proxy_port, :integer, :default => nil
+    config_param :http_proxy_user, :string, :default => nil
+    config_param :http_proxy_pass, :string, :default => nil
 
     attr_reader :hipchat
 
@@ -28,6 +32,13 @@ module Fluent
       @default_notify = conf['default_notify'] || 0
       @default_color = conf['default_color'] || 'yellow'
       @default_format = conf['default_format'] || 'html'
+      if conf['http_proxy_host']
+        HipChat::API.http_proxy(
+          conf['http_proxy_host'],
+          conf['http_proxy_port'],
+          conf['http_proxy_user'],
+          conf['http_proxy_pass'])
+      end
     end
 
     def emit(tag, es, chain)
