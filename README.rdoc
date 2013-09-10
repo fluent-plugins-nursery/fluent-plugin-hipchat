@@ -14,8 +14,13 @@
       default_color yellow
       default_notify 0
       default_format html
+      
+      # proxy settings
+      # http_proxy_host localhost
+      # http_proxy_port 8080
+      # http_proxy_user username
+      # http_proxy_pass password
     </match>
-
 
     fluent_logger.post('hipchat', {
       :from     => 'alice',
