@@ -77,6 +77,13 @@ class HipchatOutputTest < Test::Unit::TestCase
     d.run
   end
 
+  def test_topic
+    d = create_driver
+    stub(d.instance.hipchat).rooms_topic('testroom', 'foo', 'testuser')
+    d.emit({'topic' => 'foo'})
+    d.run
+  end
+
   def test_color_validate
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'yellow', 'html')
