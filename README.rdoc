@@ -31,6 +31,14 @@
       :format   => 'text',
     })
 
+    # set topic
+    fluent_logger.post('hipchat', {
+      :from     => 'alice',
+      :topic    => 'new topic',
+      :room     => 'my_room',
+    })
+
+
 = Copyright
 
 Copyright:: Copyright (c) 2012- Yuichi Tateno
