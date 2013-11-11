@@ -11,6 +11,8 @@ module Fluent
     config_param :default_from, :string, :default => nil
     config_param :default_notify, :bool, :default => nil
     config_param :default_format, :string, :default => nil
+    config_param :message_template, :string, :default => nil
+    config_param :message_key, :string, :default => nil
     config_param :http_proxy_host, :string, :default => nil
     config_param :http_proxy_port, :integer, :default => nil
     config_param :http_proxy_user, :string, :default => nil
@@ -32,6 +34,9 @@ module Fluent
       @default_notify = conf['default_notify'] || 0
       @default_color = conf['default_color'] || 'yellow'
       @default_format = conf['default_format'] || 'html'
+      @message_template = conf['message_template']
+      @message_key = conf['message_key'].split(',') if conf['message_key']
+
       if conf['http_proxy_host']
         HipChat::API.http_proxy(
           conf['http_proxy_host'],
@@ -55,7 +60,7 @@ module Fluent
     def send_message(record)
       room = record['room'] || @default_room
       from = record['from'] || @default_from
-      message = record['message']
+      message = create_message(record)
       if record['notify'].nil?
         notify = @default_notify
       else
@@ -71,6 +76,18 @@ module Fluent
       from = record['from'] || @default_from
       topic = record['topic']
       @hipchat.rooms_topic(room, topic, from)
+    end
+
+    def create_message(record)
+      if @message_template
+        values = []
+        @message_key.each do |key|
+          values << record[key] if record[key]
+        end
+        (@message_template % values)
+      else
+        record['message']
+      end
     end
   end
 end
