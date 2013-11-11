@@ -36,6 +36,11 @@ class HipchatOutputTest < Test::Unit::TestCase
     http_proxy_pass password
   ]
 
+  CONFIG_FOR_MESSAGE_TEMPLATE = %[
+    message_template [%s] - %s
+    message_key level,message
+  ]
+
   def create_driver(conf = CONFIG)
     OutputTestDriver.new(Fluent::HipchatOutput) {
     }.configure(conf)
@@ -97,5 +102,13 @@ class HipchatOutputTest < Test::Unit::TestCase
     assert_equal '8080', HipChat::API.default_options[:http_proxyport]
     assert_equal 'user', HipChat::API.default_options[:http_proxyuser]
     assert_equal 'password', HipChat::API.default_options[:http_proxypass]
+  end
+
+  def test_message_template
+    d = create_driver(CONFIG + CONFIG_FOR_MESSAGE_TEMPLATE)
+    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', '[INFO] - foo', 0, 'yellow', 'html')
+
+    d.emit({'level' => 'INFO', 'message' => 'foo'})
+    d.run
   end
 end
