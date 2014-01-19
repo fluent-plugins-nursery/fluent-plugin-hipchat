@@ -1,6 +1,6 @@
 
 module Fluent
-  class HipchatOutput < Output
+  class HipchatOutput < BufferedOutput
     COLORS = %w(yellow red green purple gray random)
     FORMAT = %w(html text)
     Fluent::Plugin.register_output('hipchat', self)
@@ -41,15 +41,19 @@ module Fluent
       end
     end
 
-    def emit(tag, es, chain)
-      es.each {|time, record|
+    def format(tag, time, record)
+      [tag, time, record].to_msgpack
+    end
+
+    def write(chunk)
+      chunk.msgpack_each do |(tag,time,record)|
         begin
           send_message(record) if record['message']
           set_topic(record) if record['topic']
         rescue => e
           $log.error("HipChat Error: #{e} / #{e.message}")
         end
-      }
+      end
     end
 
     def send_message(record)
