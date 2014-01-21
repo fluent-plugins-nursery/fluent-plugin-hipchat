@@ -15,6 +15,7 @@ module Fluent
     config_param :http_proxy_port, :integer, :default => nil
     config_param :http_proxy_user, :string, :default => nil
     config_param :http_proxy_pass, :string, :default => nil
+    config_param :flush_interval, :time, :default => 1
 
     attr_reader :hipchat
 
