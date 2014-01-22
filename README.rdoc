@@ -1,5 +1,7 @@
 = Fluent event to hipchat plugin.
 
+{<img src="https://travis-ci.org/hotchpotch/fluent-plugin-hipchat.png?branch=master" alt="Build Status" />}[https://travis-ci.org/hotchpotch/fluent-plugin-hipchat]
+
 = Installation
 
   $ fluent-gem install fluent-plugin-hipchat
