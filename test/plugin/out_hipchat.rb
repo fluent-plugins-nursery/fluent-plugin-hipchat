@@ -2,20 +2,6 @@ require 'test_helper'
 require 'fluent/plugin/out_hipchat'
 
 class HipchatOutputTest < Test::Unit::TestCase
-  class OutputTestDriver < Fluent::Test::InputTestDriver
-    def initialize(klass, tag='test', &block)
-      super(klass, &block)
-      @tag = tag
-    end
-
-    attr_accessor :tag
-
-    def emit(record, time=Time.now)
-      es = Fluent::OneEventStream.new(time.to_i, record)
-      @instance.emit(@tag, es, nil)
-    end
-  end
-
   def setup
     super
     Fluent::Test.setup
@@ -37,7 +23,7 @@ class HipchatOutputTest < Test::Unit::TestCase
   ]
 
   def create_driver(conf = CONFIG)
-    OutputTestDriver.new(Fluent::HipchatOutput) {
+    Fluent::Test::BufferedOutputTestDriver.new(Fluent::HipchatOutput) {
     }.configure(conf)
   end
 
