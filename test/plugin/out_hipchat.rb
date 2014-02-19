@@ -70,6 +70,26 @@ class HipchatOutputTest < Test::Unit::TestCase
     d.run
   end
 
+  def test_set_topic_response_error
+    d = create_driver
+    stub(d.instance.hipchat).rooms_topic('testroom', 'foo', 'testuser') {
+      {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'Topic body must be between 1 and 250 characters.' } }
+    }
+    stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'Topic body must be between 1 and 250 characters.')
+    d.emit({'topic' => 'foo'})
+    d.run
+  end
+
+  def test_send_message_response_error
+    d = create_driver
+    stub(d.instance.hipchat).rooms_message('testroom', '<abc>', 'foo', 0, 'yellow', 'html') {
+      {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'From name may not contain HTML.' } }
+    }
+    stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'From name may not contain HTML.')
+    d.emit({'from' => '<abc>', 'message' => 'foo'})
+    d.run
+  end
+
   def test_color_validate
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'yellow', 'html')
