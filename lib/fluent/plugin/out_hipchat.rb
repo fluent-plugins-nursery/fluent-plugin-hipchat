@@ -52,7 +52,7 @@ module Fluent
           send_message(record) if record['message']
           set_topic(record) if record['topic']
         rescue => e
-          $log.error("HipChat Error: #{e} / #{e.message}")
+          $log.error("HipChat Error:", :error_class => e.class, :error => e.message)
         end
       end
     end
@@ -68,14 +68,16 @@ module Fluent
       end
       color = COLORS.include?(record['color']) ? record['color'] : @default_color
       message_format = FORMAT.include?(record['format']) ? record['format'] : @default_format
-      @hipchat.rooms_message(room, from, message, notify, color, message_format)
+      response = @hipchat.rooms_message(room, from, message, notify, color, message_format)
+      raise StandardError, response['error']['message'].to_s if defined?(response['error']['message'])
     end
 
     def set_topic(record)
       room = record['room'] || @default_room
       from = record['from'] || @default_from
       topic = record['topic']
-      @hipchat.rooms_topic(room, topic, from)
+      response = @hipchat.rooms_topic(room, topic, from)
+      raise StandardError, response['error']['message'].to_s if defined?(response['error']['message'])
     end
   end
 end
