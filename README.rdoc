@@ -16,6 +16,7 @@
       default_color yellow
       default_notify 0
       default_format html
+      key_name message
       
       # proxy settings
       # http_proxy_host localhost
