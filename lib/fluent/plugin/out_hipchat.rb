@@ -11,6 +11,7 @@ module Fluent
     config_param :default_from, :string, :default => nil
     config_param :default_notify, :bool, :default => nil
     config_param :default_format, :string, :default => nil
+    config_param :default_timeout, :time, :default => nil
     config_param :http_proxy_host, :string, :default => nil
     config_param :http_proxy_port, :integer, :default => nil
     config_param :http_proxy_user, :string, :default => nil
@@ -33,6 +34,7 @@ module Fluent
       @default_notify = conf['default_notify'] || 0
       @default_color = conf['default_color'] || 'yellow'
       @default_format = conf['default_format'] || 'html'
+      @default_timeout = conf['default_timeout']
       if conf['http_proxy_host']
         HipChat::API.http_proxy(
           conf['http_proxy_host'],
@@ -68,6 +70,7 @@ module Fluent
       end
       color = COLORS.include?(record['color']) ? record['color'] : @default_color
       message_format = FORMAT.include?(record['format']) ? record['format'] : @default_format
+      @hipchat.set_timeout(@default_timeout.to_i) unless @default_timeout.nil?
       response = @hipchat.rooms_message(room, from, message, notify, color, message_format)
       raise StandardError, response['error']['message'].to_s if defined?(response['error']['message'])
     end

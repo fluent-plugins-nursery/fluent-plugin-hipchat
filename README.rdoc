@@ -16,6 +16,7 @@
       default_color yellow
       default_notify 0
       default_format html
+      default_timeout 3  # HipChat API Request Timeout Seconds (default 3)
       
       # proxy settings
       # http_proxy_host localhost
