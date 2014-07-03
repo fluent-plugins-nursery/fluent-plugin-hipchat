@@ -11,6 +11,7 @@ module Fluent
     config_param :default_from, :string, :default => nil
     config_param :default_notify, :bool, :default => nil
     config_param :default_format, :string, :default => nil
+    config_param :key_name, :string, :default => 'message'
     config_param :http_proxy_host, :string, :default => nil
     config_param :http_proxy_port, :integer, :default => nil
     config_param :http_proxy_user, :string, :default => nil
@@ -49,7 +50,7 @@ module Fluent
     def write(chunk)
       chunk.msgpack_each do |(tag,time,record)|
         begin
-          send_message(record) if record['message']
+          send_message(record) if record[@key_name]
           set_topic(record) if record['topic']
         rescue => e
           $log.error("HipChat Error:", :error_class => e.class, :error => e.message)
@@ -60,7 +61,7 @@ module Fluent
     def send_message(record)
       room = record['room'] || @default_room
       from = record['from'] || @default_from
-      message = record['message']
+      message = record[@key_name]
       if record['notify'].nil?
         notify = @default_notify
       else
@@ -69,7 +70,7 @@ module Fluent
       color = COLORS.include?(record['color']) ? record['color'] : @default_color
       message_format = FORMAT.include?(record['format']) ? record['format'] : @default_format
       response = @hipchat.rooms_message(room, from, message, notify, color, message_format)
-      raise StandardError, response['error']['message'].to_s if defined?(response['error']['message'])
+      raise StandardError, response['error'][@key_name].to_s if defined?(response['error'][@key_name])
     end
 
     def set_topic(record)
@@ -77,7 +78,7 @@ module Fluent
       from = record['from'] || @default_from
       topic = record['topic']
       response = @hipchat.rooms_topic(room, topic, from)
-      raise StandardError, response['error']['message'].to_s if defined?(response['error']['message'])
+      raise StandardError, response['error'][@key_name].to_s if defined?(response['error'][@key_name])
     end
   end
 end
