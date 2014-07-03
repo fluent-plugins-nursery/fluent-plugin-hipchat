@@ -39,6 +39,17 @@ class HipchatOutputTest < Test::Unit::TestCase
     d.run
   end
 
+  def test_set_default_timeout
+    d = create_driver(<<-EOF)
+                      type hipchat
+                      api_token xxx
+                      default_timeout 5
+                      EOF
+    stub(d.instance.hipchat).set_timeout(5)
+    d.emit({'message' => 'foo'})
+    d.run
+  end
+
   def test_message
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red', 'html')
