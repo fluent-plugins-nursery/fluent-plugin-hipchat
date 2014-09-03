@@ -18,6 +18,7 @@ module Fluent
     config_param :http_proxy_user, :string, :default => nil
     config_param :http_proxy_pass, :string, :default => nil
     config_param :flush_interval, :time, :default => 1
+    config_param :mention_to, :string, :default => nil
 
     attr_reader :hipchat
 
@@ -36,6 +37,7 @@ module Fluent
       @default_color = conf['default_color'] || 'yellow'
       @default_format = conf['default_format'] || 'html'
       @default_timeout = conf['default_timeout']
+      @mention_to = conf['mention_to']
       if conf['http_proxy_host']
         HipChat::API.http_proxy(
           conf['http_proxy_host'],
@@ -64,6 +66,7 @@ module Fluent
       room = record['room'] || @default_room
       from = record['from'] || @default_from
       message = record[@key_name]
+      message = @mention_to + ' ' + message unless @mention_to.nil?
       if record['notify'].nil?
         notify = @default_notify
       else
