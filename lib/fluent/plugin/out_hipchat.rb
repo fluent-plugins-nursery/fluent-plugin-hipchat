@@ -5,7 +5,7 @@ module Fluent
     FORMAT = %w(html text)
     Fluent::Plugin.register_output('hipchat', self)
 
-    config_param :api_token, :string
+    config_param :api_token, :string, :secret => true
     config_param :default_room, :string, :default => nil
     config_param :default_color, :string, :default => nil
     config_param :default_from, :string, :default => nil
