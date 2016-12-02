@@ -27,6 +27,19 @@ class HipchatOutputTest < Test::Unit::TestCase
     }.configure(conf)
   end
 
+  def test_configure_default
+    d = create_driver %[
+      type hipchat
+      api_token testtoken
+    ]
+    assert_equal "yellow", d.instance.default_color
+    assert_equal "fluentd", d.instance.default_from
+    assert_equal 0, d.instance.default_notify
+    assert_equal "html", d.instance.default_format
+    assert_equal "message", d.instance.key_name
+    assert_equal 1, d.instance.flush_interval
+  end
+
   def test_default_message
     d = create_driver(<<-EOF)
                       type hipchat

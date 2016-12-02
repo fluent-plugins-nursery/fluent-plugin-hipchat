@@ -7,10 +7,10 @@ module Fluent
 
     config_param :api_token, :string, :secret => true
     config_param :default_room, :string, :default => nil
-    config_param :default_color, :string, :default => nil
-    config_param :default_from, :string, :default => nil
-    config_param :default_notify, :bool, :default => nil
-    config_param :default_format, :string, :default => nil
+    config_param :default_color, :string, :default => 'yellow'
+    config_param :default_from, :string, :default => 'fluentd'
+    config_param :default_notify, :bool, :default => false
+    config_param :default_format, :string, :default => 'html'
     config_param :key_name, :string, :default => 'message'
     config_param :default_timeout, :time, :default => nil
     config_param :http_proxy_host, :string, :default => nil
@@ -31,10 +31,7 @@ module Fluent
 
       @hipchat = HipChat::API.new(conf['api_token'])
       @default_room = conf['default_room']
-      @default_from = conf['default_from'] || 'fluentd'
       @default_notify = conf['default_notify'] || 0
-      @default_color = conf['default_color'] || 'yellow'
-      @default_format = conf['default_format'] || 'html'
       @default_timeout = conf['default_timeout']
       if conf['http_proxy_host']
         HipChat::API.http_proxy(
