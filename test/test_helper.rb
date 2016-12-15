@@ -17,4 +17,5 @@ if ENV['SIMPLE_COV']
 end
 
 require 'test/unit'
+require 'test/unit/rr'
 require 'fluent/test'
