@@ -1,12 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
-require 'rr'
-require 'test/unit'
-class Test::Unit::TestCase
-  include RR::Adapters::TestUnit
-end
-
 if ENV['SIMPLE_COV']
   require 'simplecov'
   SimpleCov.start do
@@ -17,4 +11,5 @@ if ENV['SIMPLE_COV']
 end
 
 require 'test/unit'
+require 'test/unit/rr'
 require 'fluent/test'
