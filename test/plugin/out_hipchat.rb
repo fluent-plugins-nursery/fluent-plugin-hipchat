@@ -2,6 +2,8 @@ require 'test_helper'
 require 'fluent/plugin/out_hipchat'
 
 class HipchatOutputTest < Test::Unit::TestCase
+  include Fluent::Test::Helpers
+
   def setup
     super
     Fluent::Test.setup
@@ -23,7 +25,7 @@ class HipchatOutputTest < Test::Unit::TestCase
   ]
 
   def create_driver(conf = CONFIG)
-    Fluent::Test::BufferedOutputTestDriver.new(Fluent::HipchatOutput) {
+    Fluent::Test::Driver::Output.new(Fluent::Plugin::HipchatOutput) {
     }.configure(conf)
   end
 
@@ -48,8 +50,9 @@ class HipchatOutputTest < Test::Unit::TestCase
                       EOF
     stub(d.instance.hipchat).rooms_message('testroom', 'fluentd', 'foo', 0, 'yellow', 'html')
     assert_equal d.instance.hipchat.instance_variable_get(:@token), 'xxx'
-    d.emit({'message' => 'foo'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'message' => 'foo'})
+    end
   end
 
   def test_set_default_timeout
@@ -59,39 +62,43 @@ class HipchatOutputTest < Test::Unit::TestCase
                       default_timeout 5
                       EOF
     stub(d.instance.hipchat).set_timeout(5)
-    d.emit({'message' => 'foo'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'message' => 'foo'})
+    end
   end
 
   def test_message
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red', 'html')
     assert_equal d.instance.hipchat.instance_variable_get(:@token), 'testtoken'
-    d.emit({'message' => 'foo', 'color' => 'red'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'message' => 'foo', 'color' => 'red'})
+    end
   end
 
   def test_message_override
     d = create_driver
     stub(d.instance.hipchat).rooms_message('my', 'alice', 'aaa', 1, 'random', 'text')
-    d.emit(
-      {
-        'room' => 'my',
-        'from' => 'alice',
-        'message' => 'aaa',
-        'notify' => true,
-        'color' => 'random',
-        'format' => 'text',
-      }
-    )
-    d.run
+    d.run(default_tag: "test") do
+      d.feed(
+        {
+          'room' => 'my',
+          'from' => 'alice',
+          'message' => 'aaa',
+          'notify' => true,
+          'color' => 'random',
+          'format' => 'text',
+        }
+      )
+    end
   end
 
   def test_topic
     d = create_driver
     stub(d.instance.hipchat).rooms_topic('testroom', 'foo', 'testuser')
-    d.emit({'topic' => 'foo'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'topic' => 'foo'})
+    end
   end
 
   def test_set_topic_response_error
@@ -100,8 +107,9 @@ class HipchatOutputTest < Test::Unit::TestCase
       {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'Topic body must be between 1 and 250 characters.' } }
     }
     stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'Topic body must be between 1 and 250 characters.')
-    d.emit({'topic' => 'foo'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'topic' => 'foo'})
+    end
   end
 
   def test_send_message_response_error
@@ -110,15 +118,17 @@ class HipchatOutputTest < Test::Unit::TestCase
       {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'From name may not contain HTML.' } }
     }
     stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'From name may not contain HTML.')
-    d.emit({'from' => '<abc>', 'message' => 'foo'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'from' => '<abc>', 'message' => 'foo'})
+    end
   end
 
   def test_color_validate
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'yellow', 'html')
-    d.emit({'message' => 'foo', 'color' => 'invalid'})
-    d.run
+    d.run(default_tag: "test") do
+      d.feed({'message' => 'foo', 'color' => 'invalid'})
+    end
   end
 
   def test_http_proxy

@@ -1,9 +1,14 @@
+require 'hipchat-api'
+require 'fluent/plugin/output'
 
-module Fluent
-  class HipchatOutput < BufferedOutput
+module Fluent::Plugin
+  class HipchatOutput < Output
     COLORS = %w(yellow red green purple gray random)
     FORMAT = %w(html text)
+    DEFAULT_BUFFER_TYPE = "memory"
     Fluent::Plugin.register_output('hipchat', self)
+
+    helpers :compat_parameters
 
     config_param :api_token, :string, :secret => true
     config_param :default_room, :string, :default => nil
@@ -19,14 +24,19 @@ module Fluent
     config_param :http_proxy_pass, :string, :default => nil
     config_param :flush_interval, :time, :default => 1
 
+    config_section :buffer do
+      config_set_default :@type, DEFAULT_BUFFER_TYPE
+      config_set_default :chunk_keys, ['tag']
+    end
+
     attr_reader :hipchat
 
     def initialize
       super
-      require 'hipchat-api'
     end
 
     def configure(conf)
+      compat_parameters_convert(conf, :buffer)
       super
 
       @hipchat = HipChat::API.new(conf['api_token'])
@@ -40,10 +50,19 @@ module Fluent
           conf['http_proxy_user'],
           conf['http_proxy_pass'])
       end
+      raise Fluent::ConfigError, "'tag' in chunk_keys is required." if not @chunk_key_tag
     end
 
     def format(tag, time, record)
       [tag, time, record].to_msgpack
+    end
+
+    def formatted_to_msgpack_binary
+      true
+    end
+
+    def multi_workers_ready?
+      true
     end
 
     def write(chunk)
