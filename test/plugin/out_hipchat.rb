@@ -50,7 +50,7 @@ class HipchatOutputTest < Test::Unit::TestCase
     d.run(default_tag: "test") do
       d.feed(time, {'message' => 'foo', 'color' => 'red'})
     end
-    assert_equal ["test", time, {'message' => 'foo', 'color' => 'red'}].to_msgpack, d.formatted[0]
+    assert_equal [time, {'message' => 'foo', 'color' => 'red'}].to_msgpack, d.formatted[0]
   end
 
   def test_default_message

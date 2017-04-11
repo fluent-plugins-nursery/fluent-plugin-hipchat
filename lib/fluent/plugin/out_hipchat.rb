@@ -54,7 +54,7 @@ module Fluent::Plugin
     end
 
     def format(tag, time, record)
-      [tag, time, record].to_msgpack
+      [time, record].to_msgpack
     end
 
     def formatted_to_msgpack_binary
@@ -66,7 +66,7 @@ module Fluent::Plugin
     end
 
     def write(chunk)
-      chunk.msgpack_each do |(tag,time,record)|
+      chunk.msgpack_each do |(time,record)|
         begin
           send_message(record) if record[@key_name]
           set_topic(record) if record['topic']
