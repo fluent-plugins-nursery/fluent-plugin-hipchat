@@ -42,6 +42,17 @@ class HipchatOutputTest < Test::Unit::TestCase
     assert_equal 1, d.instance.flush_interval
   end
 
+  def test_format
+    d = create_driver
+    stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red', 'html')
+    assert_equal d.instance.hipchat.instance_variable_get(:@token), 'testtoken'
+    time = event_time
+    d.run(default_tag: "test") do
+      d.feed(time, {'message' => 'foo', 'color' => 'red'})
+    end
+    assert_equal ["test", time, {'message' => 'foo', 'color' => 'red'}].to_msgpack, d.formatted[0]
+  end
+
   def test_default_message
     d = create_driver(<<-EOF)
                       type hipchat
