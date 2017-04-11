@@ -71,7 +71,7 @@ module Fluent::Plugin
           send_message(record) if record[@key_name]
           set_topic(record) if record['topic']
         rescue => e
-          $log.error("HipChat Error:", :error_class => e.class, :error => e.message)
+          log.error("HipChat Error:", :error_class => e.class, :error => e.message)
         end
       end
     end
