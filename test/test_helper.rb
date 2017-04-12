@@ -13,3 +13,5 @@ end
 require 'test/unit'
 require 'test/unit/rr'
 require 'fluent/test'
+require 'fluent/test/driver/output'
+require 'fluent/test/helpers'
