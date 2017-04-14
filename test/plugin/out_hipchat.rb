@@ -78,6 +78,16 @@ class HipchatOutputTest < Test::Unit::TestCase
     end
   end
 
+  def test_set_mention_to
+    d = create_driver(<<-EOF)
+                      type hipchat
+                      api_token xxx
+                      mention_to @here
+                      EOF
+    d.emit({'message' => 'foo'})
+    d.run
+  end
+
   def test_message
     d = create_driver
     stub(d.instance.hipchat).rooms_message('testroom', 'testuser', 'foo', 0, 'red', 'html')

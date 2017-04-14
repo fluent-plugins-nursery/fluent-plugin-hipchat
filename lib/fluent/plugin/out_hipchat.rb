@@ -23,6 +23,7 @@ module Fluent::Plugin
     config_param :http_proxy_user, :string, :default => nil
     config_param :http_proxy_pass, :string, :default => nil
     config_param :flush_interval, :time, :default => 1
+    config_param :mention_to, :string, :default => nil
 
     config_section :buffer do
       config_set_default :@type, DEFAULT_BUFFER_TYPE
@@ -43,6 +44,7 @@ module Fluent::Plugin
       @default_room = conf['default_room']
       @default_notify = conf['default_notify'] || 0
       @default_timeout = conf['default_timeout']
+      @mention_to = conf['mention_to']
       if conf['http_proxy_host']
         HipChat::API.http_proxy(
           conf['http_proxy_host'],
@@ -80,6 +82,7 @@ module Fluent::Plugin
       room = record['room'] || @default_room
       from = record['from'] || @default_from
       message = record[@key_name]
+      message = @mention_to + ' ' + message unless @mention_to.nil?
       if record['notify'].nil?
         notify = @default_notify
       else
