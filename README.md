@@ -4,7 +4,7 @@
 
 # Installation
 
-  $ fluent-gem install fluent-plugin-hipchat
+    $ fluent-gem install fluent-plugin-hipchat
 
 # Usage
 
