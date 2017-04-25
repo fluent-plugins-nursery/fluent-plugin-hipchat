@@ -1,12 +1,12 @@
-= Fluent event to hipchat plugin.
+# Fluent event to hipchat plugin.
 
-{<img src="https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat]
+[![Build Status](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat.svg?branch=master)](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat)
 
-= Installation
+# Installation
 
-  $ fluent-gem install fluent-plugin-hipchat
+    $ fluent-gem install fluent-plugin-hipchat
 
-= Usage
+# Usage
 
     <match hipchat>
       type hipchat
@@ -43,7 +43,10 @@
     })
 
 
-= Copyright
+# Copyright
 
-Copyright:: Copyright (c) 2012- Yuichi Tateno
-License::   Apache License, Version 2.0
+Copyright (c) 2012- Yuichi Tateno
+
+# License
+
+Apache License, Version 2.0
