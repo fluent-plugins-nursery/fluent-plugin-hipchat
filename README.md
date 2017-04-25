@@ -2,6 +2,13 @@
 
 [![Build Status](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat.svg?branch=master)](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat)
 
+# Requirements
+
+| fluent-plugin-hipchat | fluentd    | ruby   |
+|-----------------------|------------|--------|
+| >= 0.3.0              | >= v0.14.0 | >= 2.1 |
+| < 0.3.0               | >= v0.12.0 | >= 1.9 |
+
 # Installation
 
     $ fluent-gem install fluent-plugin-hipchat
