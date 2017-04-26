@@ -16,7 +16,7 @@
 # Usage
 
     <match hipchat>
-      type hipchat
+      @type hipchat
       api_token XXX
       default_room my_room
       default_from fluentd
