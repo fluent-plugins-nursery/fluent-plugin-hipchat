@@ -31,10 +31,6 @@ module Fluent::Plugin
 
     attr_reader :hipchat
 
-    def initialize
-      super
-    end
-
     def configure(conf)
       compat_parameters_convert(conf, :buffer)
       super
