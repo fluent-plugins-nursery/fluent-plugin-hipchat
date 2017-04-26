@@ -117,7 +117,7 @@ class HipchatOutputTest < Test::Unit::TestCase
     stub(d.instance.hipchat).rooms_topic('testroom', 'foo', 'testuser') {
       {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'Topic body must be between 1 and 250 characters.' } }
     }
-    stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'Topic body must be between 1 and 250 characters.')
+    stub($log).error("HipChat Error:", error_class: StandardError, error: 'Topic body must be between 1 and 250 characters.')
     d.run(default_tag: "test") do
       d.feed({'topic' => 'foo'})
     end
@@ -128,7 +128,7 @@ class HipchatOutputTest < Test::Unit::TestCase
     stub(d.instance.hipchat).rooms_message('testroom', '<abc>', 'foo', 0, 'yellow', 'html') {
       {'error' => { 'code' => 400, 'type' => 'Bad Request', 'message' => 'From name may not contain HTML.' } }
     }
-    stub($log).error("HipChat Error:", :error_class => StandardError, :error => 'From name may not contain HTML.')
+    stub($log).error("HipChat Error:", error_class: StandardError, error: 'From name may not contain HTML.')
     d.run(default_tag: "test") do
       d.feed({'from' => '<abc>', 'message' => 'foo'})
     end

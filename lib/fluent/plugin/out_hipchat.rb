@@ -10,19 +10,19 @@ module Fluent::Plugin
 
     helpers :compat_parameters
 
-    config_param :api_token, :string, :secret => true
-    config_param :default_room, :string, :default => nil
-    config_param :default_color, :string, :default => 'yellow'
-    config_param :default_from, :string, :default => 'fluentd'
-    config_param :default_notify, :bool, :default => false
-    config_param :default_format, :string, :default => 'html'
-    config_param :key_name, :string, :default => 'message'
-    config_param :default_timeout, :time, :default => nil
-    config_param :http_proxy_host, :string, :default => nil
-    config_param :http_proxy_port, :integer, :default => nil
-    config_param :http_proxy_user, :string, :default => nil
-    config_param :http_proxy_pass, :string, :default => nil
-    config_param :flush_interval, :time, :default => 1
+    config_param :api_token, :string, secret: true
+    config_param :default_room, :string, default: nil
+    config_param :default_color, :string, default: 'yellow'
+    config_param :default_from, :string, default: 'fluentd'
+    config_param :default_notify, :bool, default: false
+    config_param :default_format, :string, default: 'html'
+    config_param :key_name, :string, default: 'message'
+    config_param :default_timeout, :time, default: nil
+    config_param :http_proxy_host, :string, default: nil
+    config_param :http_proxy_port, :integer, default: nil
+    config_param :http_proxy_user, :string, default: nil
+    config_param :http_proxy_pass, :string, default: nil
+    config_param :flush_interval, :time, default: 1
 
     config_section :buffer do
       config_set_default :@type, DEFAULT_BUFFER_TYPE
@@ -67,7 +67,7 @@ module Fluent::Plugin
           send_message(record) if record[@key_name]
           set_topic(record) if record['topic']
         rescue => e
-          log.error("HipChat Error:", :error_class => e.class, :error => e.message)
+          log.error("HipChat Error:", error_class: e.class, error: e.message)
         end
       end
     end
