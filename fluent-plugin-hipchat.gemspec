@@ -4,7 +4,7 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |gem|
   gem.name        = "fluent-plugin-hipchat"
   gem.description = "fluent HipChat plugin"
-  gem.homepage    = "https://github.com/hotchpotch/fluent-plugin-hipchat"
+  gem.homepage    = "https://github.com/fluent-plugins-nursery/fluent-plugin-hipchat"
   gem.summary     = gem.description
   gem.version     = File.read("VERSION").strip
   gem.authors     = ["Yuichi Tateno"]
