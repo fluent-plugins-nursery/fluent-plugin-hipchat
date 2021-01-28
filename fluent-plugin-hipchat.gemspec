@@ -24,4 +24,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "pry"
   gem.add_development_dependency "test-unit", ">= 3.1.0"
   gem.add_development_dependency "test-unit-rr", ">= 1.0.5"
+  gem.add_development_dependency "webrick"
 end
