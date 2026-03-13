@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> Atlassian has officially discontinued the HipChat service (see the [official announcement](https://web.archive.org/web/20180726233405/https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership)).
+>
+> Consequently, this plugin is no longer functional.
+>
+> This repository has been archived and will be kept read-only for historical purposes.
+
 # Fluent event to hipchat plugin.
 
 [![Build Status](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat.svg?branch=master)](https://travis-ci.org/fluent-plugins-nursery/fluent-plugin-hipchat)
